@@ -1,0 +1,645 @@
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#050510"
+    tools:context=".MainActivity">
+
+    <!-- Custom game rendering canvas -->
+    <com.example.modernandroidtemplate.GameView
+        android:id="@+id/gameView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- ========================================== -->
+    <!-- HUD Overlay (Heads-Up Display)             -->
+    <!-- ========================================== -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/hudLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp"
+        android:visibility="gone">
+
+        <!-- Score Column -->
+        <TextView
+            android:id="@+id/tvScoreLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="SCORE"
+            android:textColor="#5500FFCC"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:typeface="monospace"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvScore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="000000"
+            android:textColor="#FFFFFF"
+            android:textSize="26sp"
+            android:textStyle="bold"
+            android:typeface="monospace"
+            app:layout_constraintStart_toStartOf="@id/tvScoreLabel"
+            app:layout_constraintTop_toBottomOf="@id/tvScoreLabel" />
+
+        <!-- High Score Column -->
+        <TextView
+            android:id="@+id/tvHighScoreLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="HIGH SCORE"
+            android:textColor="#888888"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:typeface="monospace"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvHighScore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="000000"
+            android:textColor="#FFDC00"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:typeface="monospace"
+            app:layout_constraintEnd_toEndOf="@id/tvHighScoreLabel"
+            app:layout_constraintTop_toBottomOf="@id/tvHighScoreLabel" />
+
+        <!-- Shield -->
+        <TextView
+            android:id="@+id/tvShieldLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="DEFENSE SHIELDS"
+            android:textColor="#0074D9"
+            android:textSize="9sp"
+            android:textStyle="bold"
+            android:typeface="monospace"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvScore" />
+
+        <ProgressBar
+            android:id="@+id/pbShield"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="6dp"
+            android:layout_marginTop="2dp"
+            android:max="100"
+            android:progress="0"
+            android:progressDrawable="@android:drawable/progress_horizontal"
+            app:layout_constraintTop_toBottomOf="@id/tvShieldLabel" />
+
+        <!-- Hull Stability -->
+        <TextView
+            android:id="@+id/tvHealthLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="HULL STABILITY"
+            android:textColor="#FF4136"
+            android:textSize="9sp"
+            android:textStyle="bold"
+            android:typeface="monospace"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/pbShield" />
+
+        <ProgressBar
+            android:id="@+id/pbHealth"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="8dp"
+            android:layout_marginTop="2dp"
+            android:max="100"
+            android:progress="100"
+            android:progressDrawable="@android:drawable/progress_horizontal"
+            app:layout_constraintTop_toBottomOf="@id/tvHealthLabel" />
+
+        <!-- ========================================== -->
+        <!-- Boss Health Bar                            -->
+        <!-- ========================================== -->
+        <LinearLayout
+            android:id="@+id/layoutBossHealth"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_marginTop="16dp"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@id/pbHealth">
+
+            <TextView
+                android:id="@+id/tvBossName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ANCIENT DRAGON"
+                android:textColor="#FF4136"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:typeface="monospace" />
+
+            <ProgressBar
+                android:id="@+id/pbBossHealth"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:layout_marginTop="4dp"
+                android:max="100"
+                android:progress="100"
+                android:progressDrawable="@android:drawable/progress_horizontal" />
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- ========================================== -->
+    <!-- Start Screen Overlay                       -->
+    <!-- ========================================== -->
+    <ScrollView
+        android:id="@+id/startScreenLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#F204040E"
+        android:fillViewport="true"
+        android:visibility="visible">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:padding="24dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:gravity="center"
+                android:text="SPACE DEFENDER"
+                android:textColor="#00FFCC"
+                android:textSize="34sp"
+                android:textStyle="bold"
+                android:typeface="monospace" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:text="Defend your sector from the infinite void!"
+                android:textColor="#A0A0B0"
+                android:textSize="12sp" />
+
+            <!-- Points Wallet -->
+            <TextView
+                android:id="@+id/tvWalletPoints"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:background="#151530"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="8dp"
+                android:text="WALLET: 0 PTS"
+                android:textColor="#FFDC00"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:typeface="monospace" />
+
+            <!-- HANGAR AND UPGRADE ARMORED SECTION -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="--- CUSTOMIZE VEHICLE ---"
+                android:textColor="#888888"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:typeface="monospace" />
+
+            <!-- Ship Selector Row -->
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <!-- Spaceship Card -->
+                    <LinearLayout
+                        android:id="@+id/cardShipDefault"
+                        android:layout_width="120dp"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="6dp"
+                        android:background="#202040"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:padding="10dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="SPACESHIP"
+                            android:textColor="#FFFFFF"
+                            android:textSize="11sp"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Classic"
+                            android:textColor="#A0A0B0"
+                            android:textSize="9sp" />
+                        <Button
+                            android:id="@+id/btnSelectShipDefault"
+                            android:layout_width="match_parent"
+                            android:layout_height="32dp"
+                            android:layout_marginTop="8dp"
+                            android:backgroundTint="#00FFCC"
+                            android:insetTop="0dp"
+                            android:insetBottom="0dp"
+                            android:text="SELECT"
+                            android:textColor="#000000"
+                            android:textSize="9dp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <!-- Futuristic Car Card -->
+                    <LinearLayout
+                        android:id="@+id/cardShipCar"
+                        android:layout_width="120dp"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="6dp"
+                        android:background="#151525"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:padding="10dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="CYBER CAR"
+                            android:textColor="#FFFFFF"
+                            android:textSize="11sp"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:id="@+id/tvCostShipCar"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="500 PTS"
+                            android:textColor="#FFDC00"
+                            android:textSize="9sp" />
+                        <Button
+                            android:id="@+id/btnSelectShipCar"
+                            android:layout_width="match_parent"
+                            android:layout_height="32dp"
+                            android:layout_marginTop="8dp"
+                            android:backgroundTint="#888888"
+                            android:insetTop="0dp"
+                            android:insetBottom="0dp"
+                            android:text="BUY"
+                            android:textColor="#FFFFFF"
+                            android:textSize="9dp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <!-- Jetpack Card -->
+                    <LinearLayout
+                        android:id="@+id/cardShipJetpack"
+                        android:layout_width="120dp"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="6dp"
+                        android:background="#151525"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:padding="10dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="JETPACK"
+                            android:textColor="#FFFFFF"
+                            android:textSize="11sp"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:id="@+id/tvCostShipJetpack"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="1500 PTS"
+                            android:textColor="#FFDC00"
+                            android:textSize="9sp" />
+                        <Button
+                            android:id="@+id/btnSelectShipJetpack"
+                            android:layout_width="match_parent"
+                            android:layout_height="32dp"
+                            android:layout_marginTop="8dp"
+                            android:backgroundTint="#888888"
+                            android:insetTop="0dp"
+                            android:insetBottom="0dp"
+                            android:text="BUY"
+                            android:textColor="#FFFFFF"
+                            android:textSize="9dp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                </LinearLayout>
+            </HorizontalScrollView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="--- CUSTOMIZE WEAPONS ---"
+                android:textColor="#888888"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:typeface="monospace" />
+
+            <!-- Weapon Selector Row -->
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <!-- Plasma Card -->
+                    <LinearLayout
+                        android:id="@+id/cardGunPlasma"
+                        android:layout_width="110dp"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="6dp"
+                        android:background="#202040"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:padding="10dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="PLASMA"
+                            android:textColor="#FFFFFF"
+                            android:textSize="11sp"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Single Fire"
+                            android:textColor="#A0A0B0"
+                            android:textSize="9sp" />
+                        <Button
+                            android:id="@+id/btnSelectGunPlasma"
+                            android:layout_width="match_parent"
+                            android:layout_height="32dp"
+                            android:layout_marginTop="8dp"
+                            android:backgroundTint="#00FFCC"
+                            android:insetTop="0dp"
+                            android:insetBottom="0dp"
+                            android:text="SELECT"
+                            android:textColor="#000000"
+                            android:textSize="9dp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <!-- Double Shot Card -->
+                    <LinearLayout
+                        android:id="@+id/cardGunDouble"
+                        android:layout_width="110dp"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="6dp"
+                        android:background="#151525"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:padding="10dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="DOUBLE BOLT"
+                            android:textColor="#FFFFFF"
+                            android:textSize="11sp"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:id="@+id/tvCostGunDouble"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="300 PTS"
+                            android:textColor="#FFDC00"
+                            android:textSize="9sp" />
+                        <Button
+                            android:id="@+id/btnSelectGunDouble"
+                            android:layout_width="match_parent"
+                            android:layout_height="32dp"
+                            android:layout_marginTop="8dp"
+                            android:backgroundTint="#888888"
+                            android:insetTop="0dp"
+                            android:insetBottom="0dp"
+                            android:text="BUY"
+                            android:textColor="#FFFFFF"
+                            android:textSize="9dp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <!-- Spread Fire Card -->
+                    <LinearLayout
+                        android:id="@+id/cardGunSpread"
+                        android:layout_width="110dp"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="6dp"
+                        android:background="#151525"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:padding="10dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="SPREAD SHOT"
+                            android:textColor="#FFFFFF"
+                            android:textSize="11sp"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:id="@+id/tvCostGunSpread"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="800 PTS"
+                            android:textColor="#FFDC00"
+                            android:textSize="9sp" />
+                        <Button
+                            android:id="@+id/btnSelectGunSpread"
+                            android:layout_width="match_parent"
+                            android:layout_height="32dp"
+                            android:layout_marginTop="8dp"
+                            android:backgroundTint="#888888"
+                            android:insetTop="0dp"
+                            android:insetBottom="0dp"
+                            android:text="BUY"
+                            android:textColor="#FFFFFF"
+                            android:textSize="9dp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <!-- Cosmic Beam Card -->
+                    <LinearLayout
+                        android:id="@+id/cardGunBeam"
+                        android:layout_width="110dp"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="6dp"
+                        android:background="#151525"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:padding="10dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="COSMIC BEAM"
+                            android:textColor="#FFFFFF"
+                            android:textSize="11sp"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:id="@+id/tvCostGunBeam"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="2000 PTS"
+                            android:textColor="#FFDC00"
+                            android:textSize="9sp" />
+                        <Button
+                            android:id="@+id/btnSelectGunBeam"
+                            android:layout_width="match_parent"
+                            android:layout_height="32dp"
+                            android:layout_marginTop="8dp"
+                            android:backgroundTint="#888888"
+                            android:insetTop="0dp"
+                            android:insetBottom="0dp"
+                            android:text="BUY"
+                            android:textColor="#FFFFFF"
+                            android:textSize="9dp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                </LinearLayout>
+            </HorizontalScrollView>
+
+            <Button
+                android:id="@+id/btnLaunch"
+                android:layout_width="220dp"
+                android:layout_height="56dp"
+                android:layout_marginTop="32dp"
+                android:layout_marginBottom="16dp"
+                android:backgroundTint="#00FFCC"
+                android:text="LAUNCH SHIP"
+                android:textColor="#000000"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- ========================================== -->
+    <!-- Game Over Screen Overlay                   -->
+    <!-- ========================================== -->
+    <LinearLayout
+        android:id="@+id/gameOverScreenLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#F8120612"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="32dp"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="MISSION FAILED"
+            android:textColor="#FF4136"
+            android:textSize="38sp"
+            android:textStyle="bold"
+            android:typeface="monospace" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:text="Your ship disintegrated into cosmic dust."
+            android:textColor="#CCCCCC"
+            android:textSize="14sp" />
+
+        <!-- Score Summary Card -->
+        <LinearLayout
+            android:layout_width="260dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:background="#20152B"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="FINAL SCORE"
+                android:textColor="#888888"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvFinalScore"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="000000"
+                android:textColor="#FFFFFF"
+                android:textSize="32sp"
+                android:textStyle="bold"
+                android:typeface="monospace" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="SECTOR RECORD"
+                android:textColor="#888888"
+                android:textSize="11sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvFinalHighScore"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="000000"
+                android:textColor="#FFDC00"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:typeface="monospace" />
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btnRelaunch"
+            android:layout_width="220dp"
+            android:layout_height="56dp"
+            android:layout_marginTop="40dp"
+            android:backgroundTint="#FF4136"
+            android:text="RELAUNCH"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
